@@ -1,0 +1,133 @@
+﻿Abstract 
+General introduction : Graph algorithms, importance and relevance of graphs 
+
+Research Question : Thee maxflow problem, performance modelling, introduction to software profiling. 
+
+Means : c++ and posix thread library.  
+
+Outcomes : application of maxflow.  
+
+Impacts :
+
+
+
+Statement of Purpose/Thesis/ Research Problem/Research Question
+ Clearly states purpose, research problem, and/or research question(s)
+ Clearly outlines objectives, goals, findings, or argument
+Analysis
+ Clearly states methodology (theory and methods for completing research, obtaining
+and evaluating sources/evidence, etc.)
+ Articulated in an organized manner
+ Analytic plan is appropriate for research objectives
+Results/Conclusion
+ Results and conclusions are clear
+ Results and conclusions are supported by evidence and related to the research
+purpose/thesis/question
+ Flows logically from methodology
+Importance/Relevance
+ Clearly outlines the importance of research goals and conclusions
+ Conveys the relevance/broader impacts of research
+
+Rough draft : 
+
+Since the late 80's, from the advent of multi-processors developing algorithms to run in parallel in a multi-processor environment is a fascination to computer scientists.[one way to begin].
+
+Importance of the research is  
+
+Clearly outlines the importance of research goals and conclusions
+Conveys the relevance/broader impacts of research
+
+a heuristic to reduce the overall number of operations and also
+
+We also focus our efforts in analyzing and developing effective schemes for work sharing between different cores in our processor, as the overall performance of the implementation is limited by work done per core. 
+ Hence algorithms that work on graph problems can be implemented to run in parallel taking advantage of the multi-processor platforms. 
+
+
+
+We live in a life and age where data storage and retrieval has become an arduous and crucial computational challenge. State of the art databases store data in the form of graphs. A graph is a  collection of objects (nodes) connected to one another by edges,  typically edges represent the relation between the pair of objects it connects. A graph can be visualized as a network of pipes(edges) which carry water between multiple reservoirs(nodes). Graph algorithms use a lot of computational resources and since the advent of multi-processor systems  graph algorithms are implemented to work in parallel across many multiple processor-cores in a computer. The objective of the research is to implement an algorithm and tune its performance upon the underlying hardware. The implemented algorithm is an asynchronous parallel version of the popular push-relabel algorithm to find max-flow in a given input graph. Max-flow problem helps us find the maximum amount of commodity(water) that can go from one point to another in a given network-flow graph. The algorithm finds max-flow with O(|V|2|E|) operations, where V is the number of nodes and E is the number of edges in a given input graph. The algorithm is implemented using C++ and POSIX threads. The performance data was collected using profiling tools. The performance of the implementation on an  Intel Xeon processor is studied, we have suggested and incorporated various performance enhancement schemes. The novelty of the implemented algorithm is that it has no global-synchronization points. If we set up  the infrastructure for each of the cores in the processor, the inter-core interaction is very minimum. Inter-core communication is a time consuming process and minimizing it will reduce the execution time. Bottleneck in performance was found to be due to imbalance in work-load between different cores in the processor, hence a work sharing strategy was suggested taking the underlying hardware into consideration. Additionally we have implemented a heuristic to reduce the total number of operations in the execution of our algorithm. Experiments show that the entire implementation(main algorithm ,the heuristic and the work-sharing strategy) exhibits better scalability and faster execution speed than other contemporary parallel push relabel algorithms. Max-flow problem has its applications in many areas like computer networks, bio-informatics and data storage.These days, performance of software is equally dependent on both hardware resources and it's utilization by the software developer. Mobile Routing algorithms that work on real-time data can use the discussed techniques to optimize the use of hardware resources and thereby deliver higher user satisfaction.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Press paragraph: 
+
+“The free performance-lunch is over”- Herb Sutter
+
+Since 2005, We have been realizing that the serial processing speed in a micro-processor was reaching its limit. Since then, software developers are forced to develop massively parallel programs to make use of this multi-processor environment. Accepting the notion, we have developed an implementation of a multi-threaded graph algorithm called the push-relabel algorithm to find maximum flow. Performance of the algorithm was studied on the Intel Xeon micro-processor. An insight on developing parallel high-performance implementation on a state of the art processor is discussed in the paper. 
+
+
+
+
+Implementation of Asynchronous Parallel Push-Relabel Algorithm for Maximum Network Flow and Performance Analysis on Intel-Xeon Architecture.  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    

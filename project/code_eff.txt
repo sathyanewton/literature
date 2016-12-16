@@ -1,0 +1,160 @@
+
+What you should know
+
+This is a course for programmers. If I'm going to talk about efficient memory usage, I'll be discussing data times, variables, arrays, and objects. If I'm going to talk through the optimal use of iteration, well you need to understand a loop when you see one. But if you've watched any of my other foundations or programming courses past the fundamentals one, you'll have a good idea of what to expect here. I will be as generic as I can be, often using pseudocode or simple readable examples from common languages because I want you to get to the end of this course and think, that was incredibly useful whether you're working on desktop applications in Java, Objective-C mobile applications, Python web applications, C# class libraries or anything else.
+
+So what I expect from you is general development skills. You're comfortable developing in a general purpose programming language, you understand the common vocabulary and concepts of modern software development and you're not freaked out if you see a different language from your personal favorite. Because of the nature of this course, I will not be getting into the very specific techniques for optimization that only apply to a particular point release of a specific operating system running on a certain kind of CPU with a distinct kind of ssd drive.
+
+This is a general course on efficiency. Now there are efficiency improvements you can focus on that are unique to your particular language and environment and version of the operating system. Of course there are, but those kind of improvements are usually not the first place you need to be looking. Now, sure, in this course I will talk about language and environment differences as they affect efficiency. There are impacts of using a compiled language over interpreted language. There are consequences when using a garbage collected language as opposed to one with manual memory management.
+
+And likewise, the kind of application you're working on also has repercussions. Not all the choices you'd make for optimizing a server-based web application are exactly the same that you'd make for improving a browser-based mobile application. And we will cover those. But for the moment, forget about all that. Because if I were teaching this content to an audience of experienced developers with 100 different backgrounds and I ask them to discuss their biggest efficiency wins. They would be able to have that conversation regardless of language, because the most significant improvements won't come from tiny choices unique to your environment.
+
+They will come from much more general ideas. Fixes you could recognize, use, and apply across many different kinds of applications in many languages and environments. And in the first section of this course, we will explore those general ideas. And some basic principles, and as you'll see in a moment, I'll begin this course by trying to discourage you from doing anything at all.
+
+
+
+Clearing up the misconceptions
+
+When I talk to developers about working on efficiency and optimization of applications, and if they haven't done this kind of work before, they're often intimidated by it and I will hear the same two misconceptions, two totally understandable but thankful incorrect assumptions about what this work really involves. First, that improving the efficiency of an application is going to be something like copy editing the manuscript of a badly written novel, or a technical training manual. So if this represented our application, we're going to have to go through this entire thing line by line with red pen and highlighter attempting to tweak and improve every tiny part of it.
+
+Trying to squeeze every last ounce of improvement out of every single line. No, this is rarely, if ever necessary. Because the likelihood is that even in a large application there is just a handful of places in here. Sometimes even just one, that you really need to deal with. And if you find, and improve, those places, what you can do there will objectively beat into insignificance, every other possible improvement you could make to the rest of the program.
+
+But there's the question, where are those places? Well before we get to finding those, let me deal with the second misconception. That working on efficiency always requires us to have, guru level knowledge of the language and environment. That we're secretly worried that the problem is going to end up being that we used the straight forward classes and methods we learned in the first few weeks with the language. And some performance hipster is going to come along and sneer at us and say, oh you're still using the string class, well nobody actually uses the string class, that's just for noobs.
+
+And we're going to have to replace everything with a collection of of obscure methods buried in complex classes in some esoteric framework we never even heard of before. Again. Now, huge improvements are achievable with code we could've written in our first few weeks, or even days, with the language. Now you get those two misconceptions out of the way, and you realize that efficiency is not some black art, that only experts can achieve. It's something all developers can work on. Now, are there advanced and very specific improvements you can make if you are an expert? Well, of course, having more options is never a bad thing.
+
+But, being an expert is not necessary. And in one way may even be detrimental because the attitude we should bring to the first steps of this is one of humility, not a word easily associated with software developers. But, as we'll see, one that can be very useful.
+
+
+
+Rule 1: Code efficiency
+
+You maybe familiar with the phase first, do no harm. Sometimes, attributed to the Hippocratic Oath from 500 BC or there about, but a fundamental principal of medical ethics. First, don't make it worse. There maybe a medical problem but if we just dive in, however pure our intentions, we risk making things worse. So, responsibility number one in medical ethics is don't do that. We would be wise to keep that idea in mind. So, what I'm going to call my personal rule number one of working on code efficiency, first, do nothing.
+
+Okay, this course isn't going to be very long if I successfully persuade you to do nothing every time, but notice the way that I'm phrasing this. First, do nothing, first do no harm. So, a problem has presented itself, some kind of efficiency issue, performance issue, responsiveness issue. Just stop for a moment. Leave the code alone. Don't assume you know how to fix it or where to go to fix it. We're trying not to jump to conclusions.
+
+We are going to work on efficiency, but first we need to pause so we can understand what the problem really is. Now, if your immediate reaction is, well I can't do nothing. I have to do something now. I have an application that's crashing. We are having very different conversations. If your code is crashing on any kind of repeatable basis, efficiency is not your primary concern. Your first order of business is to get the code working at all before you worry about it working efficiently or optimally. Now you might debate the word here.
+
+You might hear something like oh, the program is crashing because of inefficient use of memory. Well again, if this is happening on any kind of regular basis, that's more ineffective or unreliable or even unacceptable use of memory, rather than inefficient. Now that's a different problem. That's a repeatable bug, and that needs fixed before you ask these efficiency questions. If there are errors in the logic, we don't fix anything by just making those errors run faster. So we might be improving our application but we are not bug fixing here.
+
+That's not the focus. Now if we're working on optimizing existing code, and we usually are working on existing code for reasons I will cover in a moment, the precondition for working on efficiency is that the code already works. And that we first do nothing. We need to stop so we can understand where the problem really is.
+
+
+
+Rule 2: You don't know the problem
+
+We get to my rule number two of code efficiency. Assume you don't know what the problem is until you measure it, you don't know what the problem is until you measure it. If an application has an issue, slow to start, slow to respond, slow to finish. If it has a user interface, perhaps, the screen is freezing for a second or two, animations are jittery or all sorts of possible issues that could presents itself. Well, your gut feeling about what is wrong with it is an astoundingly bad way to approach this. Sure, your gut may be right from time to time, the law of numbers would suggests that, but it's a very habit to get into.
+
+You would be mistaking the symptom for the problem, and the same symptom can manifest for very different problems. A user interface that freezes for a second might be a memory issue in one case, a threading issue in another, a network issue in another, an algorithm issue in another. So we always want to use some kind of objective measurement, some kind of performance analysis to prove that we understand where the problem lies. This might involve a diagnostic program like a profile or a bench marking program that can tell us memory usage, give us statistics on what kind of objects are taking up the most space, or how much CPU we're using or if we're using multi-threading, what kind of activity is going on across threads.
+
+It could be a tool to see the calls we're making across the network, how long we're taking, how much data we are sending or receiving. It could be something very low tech as just introducing some logging or debug statements into our code to write some kind of time stamp out, an objective measurement of how long our code is taking to get from point A to point B. And in some cases, we might even use a debugger tool, not so much for finding an actual legitimate bug, but being able to stamp through a sanction of our code to prove to ourselves that the way we think it's operating has some relation to reality.
+
+So, there are multiple tools available to us, depending on both the language and the context, the kind of application we're building, and there are so many options because we've kind of being talking about efficiency as if it's one thing, as if that word means something specific and it doesn't. We cannot approach this as a single issue with a single solutions. There are several independent, sometimes interdependent areas of our code that we may end up working on needing different techniques and different tools.
+
+Often we'll need to try several tools just to narrow down the issue to the right area. But again, assume that you don't know what the problem is until you measure it, otherwise it's conjecture and guesswork. Only measurement will allow us to reliably shift our focus to the correct area, zoom in on that, and importantly, when we change something, enable us to understand if we did actually improve it, or just made it worse, or just spun our wheels, made a lot of noise, and did nothing at all.
+
+But okay, if we need to measure, and there's multiple areas we can measure. Let's get a little bit more explicit about those areas before we get to the next rule. So, what exactly is meant by this word efficiency and where are the different opportunities for improving it.
+
+
+
+Areas of efficiency
+
+So I'm using the term code efficiency for the title of this course but there are other terms I could have used like program optimization. Now, some people might think of these concepts with words like performance or just speed but those don't tell the whole story. And in truth none of these terms are really good. One of the challenges discussing this is the words we use like efficiency or optimization, they sound very clear, very precise. Afterall if we can be efficient then surely our program is either efficient or it is inefficient. Our code is either optimized or it is not, simple yes or no.
+
+The reality is much more complicated, because as already mentioned, we can work on the efficiency of multiple areas of our application. And what we improve in one part of our code could be detrimental to another. Now, for the purposes of this course, I'm going to explore four main areas we can work on efficiently, four areas of focus. All of which I will go into as separate sections of the course, but let me introduce them here first. First is memory, by this I mean the active memory usage of your application while it's executing.
+
+How much space are your objects and variables taking up in RAM? How well is that space being used? Now be aware that memory efficiency does not always mean use as little memory as possible. That is often the case, but in some circumstances, it could mean exactly the opposite. Quick sidebar. You, dear viewer, may be working in a language that doesn't have explicit keywords to allocate and deallocate memory. That doesn't mean you're off the hook. You still have a major influence on it. Even in a garbage collected or scripting language, there are many things you can do to improve memory utilization, as we'll see.
+
+Next, there's algorithmic efficiency. Now this is the area a lot of people assume that co-deficiency or program optimization is primarily about. Where we try to write code, perhaps even just a single method or function, so the actual statements there execute as fast as possible. Now this is where I might use the terms performance or speed. What we're asking is, is there a different way those statements could have been written to accomplish exactly the same result, but do it faster. Now that's algorithmic effieciency in a nutshell.
+
+You may not use the term algorithm, when you think of your own code, but that is what it means. The sequence of operations you are choosing to accomplish a task. The thought process behind your statements. The order that they're in. The way they interact with each other. Now working on the efficiency of your own algorithms will often require you to look a little deeper at the language itself. Thinking about correct data types, if there's perhaps a better built in collection class you could be using, and are you making the most of the algorithms already found in the language.
+
+When you do things like sorting. And it may also make us think about options like multi threading as well. Now next there's efficiency for disc based resources or file based resources. Your application requires the the use of some external resources. Some assets, something outside of the application itself. It's on the file system or in a database. Now, this might involve us trying to minimize the amount of times that we want to read and write to that resource, but it could also mean things like, thinking about the best format we could save our data in, or the correct compression type we should use if we need to.
+
+Or to try and reduce the amount of space that our assets take up on the drive. Now the fourth area we can work on is network efficiency. This is an area that may be be the most impactful to work on for your application responsiveness, or it may not matter at all. Maybe your app doesn't make or receive network calls, but if we are calling from one machine to another possibly to a machine on the other side of the room, possibly to a machine on the other side of the world. There are choices we can make here that will be different, if that information was sitting on the same machine.
+
+So, in this area will be things like using Cloud storage, web services, peer to peer networking So those are the four areas I'm going to cover. It's true that some people would describe it differently. Some might split things into five or six areas. Some would take database efficiency database on it's own. Some would consider memory usage to be part of algorithmic efficiency and yes these are interrelated. But I'm using this approach for two reasons. First, these are four areas that can each break a program's responsiveness regardless of how efficient the other areas are.
+
+And second they are all independently measurable. We can verify if a change made a difference. We can measure memory usage Either at a single moment or over time. We can measure algorithms with something as simple as a time stamp. How long does it take to execute this function 5,000 times? Or using tools to look at and compare CPU utilization. With disc resources, we can measure the amount of reads and writes to the drives, or the number database calls made. We can analyze the traffic over the network, looking at response times and amounts of data being sent back and forth.
+
+But for all of these areas, improvement is our goal, not perfection. Efficiency in each one is a sliding scale, not a simple yes or no. So the question is never, is our code efficient or is it inefficient? It can only ever be, is our code as efficient as possible? And we can only answer that when we understand our constraints. And see what is and is not under our control. And that can be very different based on the kind of application you're making, and the target you have for it.
+
+
+Rule 3: Understand what's under your control
+
+We can't treat efficiency as one problem with one solution. Even trying to summarize the word results in ugly business buzz word phrases like, making efficient use of computational resources. Well, we could simplify that as just making the most of what we have available to us. The memory, the CPU, the file assets and the network abilities of whatever we have. But that doesn't mean always grabbing as much as possible, it may mean the opposite. It may mean being a good neighbor. But before we dive into those four specific areas of memory, algorithmic efficiency,disk based resources, network resources.
+
+We must first ask, where is this application running? What is it doing? What can we predict about that? And importantly, is there anything we control about this? Because if we do not ask those questions, and we just treat all applications the same, we will miss opportunities for those big efficiency improvements. So as an example, let's imagine a web application. This is publicly available on the internet. Nothing remarkable, moderate complexity. So it's got a webserver and a data base talking to each other.
+
+This could be PHP in my SQL, or dot net in SQL server, or Java in Oracle, or Ruby on Rails in postgresql, whatever you'd like. So that's running of the server side. And when the client connects to it, it's delivering HTML, CSS, JavaScript in images to the client, to provide a rich interface of the browser. Now the part running on the browser. We really don't have a lot of control over these circumstances. Our users have MACs, PCs, laptops, tablets, phones, high-powered machines, low-powered machines, all sorts of different browsers and browser versions.
+
+So, there's low control and low predictability here. To work on efficiency, we'll need to stay aware of the lowest common denominator, the most basic setup our users have that we need to support. So we do have options, but they're a little limited. However, one of the benefits of delivering some behavior to the client is whatever we deliver to them, we don't have to do, we can just offset it to the clients. So we scale quite well, and it really doesn't matter if we got 5,000 users, 10,000 users or a million, if we're handing some behavior for them to do.
+
+As contrast, the part of this application running on the web server. Well, that's not low control, that's high control. That's one of the most controlled situations imaginable. We have high control, high predictability. But why does that matter? Well, because what we control is what we can change. If we control the server, we can scale it up, we can scale it out, we can load balance it. So if I identify a performance or efficiency issue in an application, my approach to fixing it is very different based on what I control.
+
+For example, if we realize there's a memory issue but it's on the browser side, I may have no other option than to work hard on optimizing the Javascript code, and how it works even on low specification machines. But, if there's a memory issue on the web server side, well I might be able to deal with that in five minutes by just adding a new stick of RAM to that machine. And if I can do that, I will. People are expensive, and hardware is cheap. And sometimes the most efficient thing to do is a hardware improvement, not development time.
+
+Because if my website's suddenly becoming popular, but I can practically double the amount of simultaneous visitors to that website overnight, by just adding another server. Well that's a much better idea than tasking several developers to spend weeks or months attempting to double the performance of the service side code. So we need to stay very conscious of the impacts our decisions have, and what is under our control.
+
+
+
+Rule 4: Always look for the easy win
+
+Larry Wall, the inventor of the pearl programming language said it best, for a programmer laziness is virtue. And in this course we want to be as virtuous as possible as lazy as we can be. And that's my rule number four of Code Efficiency. Always look for the easy win, the simplest fix that we'll get us the biggest results. A change we can make in one place that will be a dozen changes we could make elsewhere, and we don't just hope that one appears by accident or good fortune. We go looking for one, looking for the easy win instills the right attitude.
+
+First the assumption that an easy win does exist and if we look hard enough we will find one, and it helps us avoid the main pitfall of this work, that we get so caught up in improving an area of efficiency without thinking about whether this is the best area or even a worthwhile area to work on. But what does it actually mean to look for an easy win? Well, it means, when we start measuring, we are looking for bottlenecks. We're looking for the equivalent of a six lane highway suddenly shrinking down to one lane with a traffic light, allowing one car at a time.
+
+Some kind of noticeable slowdown in the system. A place where there's suddenly a lot more memory, or a lot more CPU, or a lot more disc IO. Now, even if it's not bringing the system to its knees, we are looking for something to leap out at us, potential for a substantial improvement, not just trying to identify 20 places we might improve by two or three percent. So if we don't find it when looking a memory, we look for it in CPU, if we don't find it there, we look we look for a, in our applications file IO or in our network communications.
+
+Now if we don't find an obvious bottle like an obvious problem, we don't give up on this. Because if the code we're measuring, if it seems to perform adequately, we're just not happy with it, then we start looking for pieces of functionality that we could remove or shift around. Is there anything this app is doing that we could just do later or not at all. Is there something the application is doing repeatedly. That we could do one sentence save, or perhaps something the app has been doing automatically every few seconds that we could decide to do only if the user explicitly asks for it.
+
+Or say, for a web application, is there something we're asking the browser to do that we could do on the web server. Or the other way around. In trying to identify these situations is a very different mindset from just jumping into the code and trying to improve it method by method and line by line. Now, will we always find a really easy win? Possibly not, but efficiency improvement are never just magically identical in their potential impact, so spend some time looking for the best place to spend your time.
+
+And as programmers, it is easy to get caught up in technological fixtures and complex programmatic solutions, all the cool advance techniques and tricks that we've had to pick up. So, always allow yourself the possibility that the answer to some of these inefficiencies, maybe so non-technical, so obvious that it almost seems like cheating but instead of a complex optimization of part of our code. We could just move it elsewhere, we could another part of the system with more available resources to do it, or as our requirements change, realize that something we've been doing all along, we just don't need to do anymore.
+
+
+Embrace your constraints
+
+These simple rules, guidelines, however you want to think of them, they are intended for general purpose, high level software application development. And that's what I'm considering you as. That you are a Mac or PC based developer, maybe Linux. But you're using a commonly available language, creating a variety of business apps, productivity apps, media applications, websites, web applications. And I'm going to address those kinds of situations, constraints and expectations. Now, if you were working in a more specialized area of software development, your expectations for efficiency would change.
+
+Say you were writing software for embedded systems, code that would be integrated directly onto a lower powered chip, and included in the hardware of a microwave, or a digital stop watch, or an avionox device. Where you would have very different, very specific constraints about memory and performance. Or if you are working on extremely low level stuff like a compiler, the language itself or writing a 3D engine, or operating system. Again, totally different constraints and expectations where knowledge of the underlying hardware is much more important.
+
+But that is not my intended audience here. It's general purpose applications development. Now I will be taking a pragmatic, not a purist approach to this. Now what I mean by that, is is you were a research oriented computer scientist, as opposed to an in the trenches software developer, then you and I would have legitimately different goals. You could focus on the purity of one specific area. You could concentrate completely on algorithmic efficiency. You could spend two years developing the next great sorting algorithim.
+
+But, if I'm trying to write and ship an application that say, in one part of the user interface will retrieve five names from the database and present them in alphabetical order. I don't want to spend two years on that sorting algorithm. I just want to be able to write myresults.sort and have it work. Now it may be true, that there's an objectively faster way to do it. But it's not worth me finding out. Because any impact it could have might be measurable, but it's negligible.
+
+Now because efficiency in computing and in development is like this series of sliding scales, and the closer that you get to the top, the more and more efficient you attempt to be in any one area. The more difficult it is, the more time it takes and the more likely that you will negatively impact some other part of the system, we will end up compromising. Now, compromise is a troubling word, nobody likes it, it has emotional baggage to it. When we compromise, it sounds like we're giving in.
+
+Nobody wants to say, well we decided to compromise in this part of the application or we compromised over here. But we will. We don't have endless resources, infinite time, never ending computing power. We will make trade offs. We will identify improvements that technically could be made, and choose not to do them. Either because of the time it takes, or the impact it has elsewhere is not worth it. Now, if you don't like the word compromise, you may prefer the term constraint, or even just judgment. So in our game we imposed a constraint on the complexity of our graphical assets over here, so we could achieve a faster frame rate over here.
+
+Or in our website we were originally wanting to use a Java Script library, but we've made a judgment to remove it to support faster page load times. All programming is judgment, and efficiency especially so. We will make judgment calls at all times along the way about what is and is not worth it. Now you may disagree with some of the judgments I make as we go through this course, and that's absolutely fine, as long as you understand why I'm making them.
+
+
+
+Areas not covered
+
+Now let me finish this introductory and conceptual section by being very explicit about three potential areas where we might have used the word efficiency but that I am not going to cover in-depth in this course, and I'll explain why. First is the idea of efficiency of the overall design. The software architecture of the planning of the application. A decision's made here, of course. Effect of the efficiency of the written application. But here's the problem and here's why I'm not talking much about it. We're lookig at things we can measure here.
+
+And while we can measure the effect of an implemented design, it's not really feasible to measure the design directly to say look at two UML diagrams and say well one of them is going to be 16.7% faster than the other. We can't really do that. So, as with writing new code, if you design, design first for clarity and later optimize for speed and resource use based on what you can measure and if you need to. Again, don't do that premature optimization. there are, as there always are, exceptions to the idea.
+
+If you were designing for an embedded system it may be an absolute must to squeeze every last ounce of performance and you'd need to know that from the get go. But that is not the typical situation for most software developers. And it's a very limiting situation to emulate if you don't need to. Now second is energy efficiency. By this, I mean something like, writing an application that will explicitly try to minimize any power draw that it has on the battery life of an unplugged laptop or a tablet. I'm not getting much into this area, because Battery life by itself is rarely an actual design request for an application.
+
+And beyond the basic idea, which is do as little as possible with the CPU, do as little as possible with the graphics chips, the techniques for working on this are often quite specific to an operating system. And they are dwarfed by simple thigns you could do on the device like turn the brightness down, or make sure it goes to sleep after a few minutes of non-use. And finally, a third area I'm not getting much into. It is true we could also work on improving the efficiency of our user interface, of the actual flow of the user experience.
+
+That is a measural metric we could analyze about how quickly tasks could be accomplished using the application. But user experience optimization is not covered here because that's really about improving the efficiency of the human beings using our application. This course is about code efficiency, optimal use of the computational resources of our application, not the human resources using it. That would be another course. A very interesting course, but it's not this course. There is one human, one role that I am primarily concerned with, and that's us as developers.
+
+Making sure that we spend our time well and that the benefits we generate are always worth it.
+
+
+https://www.linkedin.com/learning/foundations-of-programming-code-efficiency/areas-not-covered
+
+
+
+
+
+
+
+
+
+
+
